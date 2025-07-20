@@ -1,78 +1,97 @@
-# 🛡️ VEKO DOME – STEALTH MODE
+# VEKO DOME - STEALTH MODE
 
-VEKO DOME adalah alat pengaman identitas koneksi internet tingkat tinggi yang dirancang untuk melakukan **anonimisasi koneksi keluar** melalui rotasi **proxy**, **TLS fingerprint spoofing**, **user-agent acak**, dan **DNS over HTTPS**.  
-Berjalan di terminal (CLI), ringan, dan tidak memerlukan browser.
+VEKO DOME adalah sistem perlindungan dan anonimitas tingkat lanjut yang dirancang untuk:
 
-> ⚠️ Untuk penggunaan etis seperti scraping sah, load testing, dan riset keamanan. Bukan untuk penyalahgunaan.
+* Menyembunyikan identitas asli (IP publik)
+* Melindungi aktivitas scraping, crawling, dan load testing
+* Menghindari pendeteksian bot
+* Mengelola proxy, Tor, DoH, dan user-agent secara otomatis
 
----
-
-## ✨ FITUR UTAMA
-
-- 🔄 Rotasi Proxy otomatis (HTTP / SOCKS5 / TOR)
-- 🧅 Dukungan TOR Proxy
-- 🔐 DNS-over-HTTPS (DoH) untuk menyembunyikan query DNS
-- 🧬 Spoofing TLS Fingerprint (Chrome, Firefox, Safari, Edge)
-- 🎭 Rotasi User-Agent acak
-- 🧾 Header penyamaran (Referer, Accept, DNT, dll)
-- 📡 Monitoring IP Publik
-- 📟 CLI Dashboard Real-time
-- 📁 Konfigurasi fleksibel melalui `config.json`
+> Cocok digunakan bersama VEKO GO untuk pengetesan trafik anonim dan sah secara maksimal.
 
 ---
 
-## 📦 STRUKTUR FILE
+## FITUR UNGGULAN
+
+* Dukungan HTTP Proxy dan SOCKS5
+* Integrasi mode TOR (127.0.0.1:9050)
+* DNS-over-HTTPS (DoH via 1.1.1.1)
+* Rotasi otomatis IP dan User-Agent
+* Simulasi fingerprint TLS seperti Chrome, Firefox, dll
+* Monitoring IP dan status secara real-time
+* File konfigurasi otomatis
+
+---
+
+## STRUKTUR FILE
 
 ```
 veko-dome/
-├── main.go
-├── build.sh
-├── config.json
-├── proxylist.txt
-├── useragents.txt
-└── builds/
+├── main.go               # Kode utama Veko Dome
+├── config.json           # Konfigurasi awal (otomatis dibuat)
+├── proxylist.txt         # Daftar proxy (otomatis dibuat)
+├── useragents.txt        # Daftar user agent (otomatis dibuat)
+├── README.md             # Panduan penggunaan
+└── veko-dome             # Binary hasil build (setelah dibuild)
 ```
 
 ---
 
-## ⚙️ CARA BUILD
+## CARA BUILD MANUAL
+
+### SYARAT
+
+* Sudah menginstall Go: [https://go.dev/dl/](https://go.dev/dl/)
+
+### BUILD (Linux/Mac/Windows):
 
 ```bash
-bash build.sh
+# Linux/macOS:
+go build -o veko-dome main.go
+
+# Windows:
+go build -o veko-dome.exe main.go
 ```
 
-📌 Ini akan:
-- Mengunduh dependensi Go
-- Compile binary untuk Windows, Linux, macOS
-- Membuat file `config.json`, `proxylist.txt`, dan `useragents.txt`
+### CROSS-BUILD (jika ingin membuat versi .exe dari Linux/macOS):
+
+```bash
+GOOS=windows GOARCH=amd64 go build -o veko-dome.exe main.go
+```
 
 ---
 
-## 🚀 CARA MENJALANKAN
+## CARA MENJALANKAN VEKO DOME
 
-### Windows
-```bash
-./veko-dome.exe
-```
-
-### Linux / macOS
 ```bash
 ./veko-dome
 ```
 
-📌 Program akan menampilkan dashboard CLI real-time dan mulai melakukan rotasi identitas.
+Jika berhasil, terminal akan menampilkan informasi seperti ini:
+
+```
+┌────────────────── VEKO DOME - STEALTH MODE ──────────────────┐
+│ Current IP     : 185.xxx.xxx.xxx                            │
+│ Status         : Proxy Active                               │
+│ DNS Mode       : DoH (1.1.1.1)                               │
+│ TLS Spoof      : CHROME                                     │
+│ User Agent     : Mozilla/5.0 ...                            │
+│ Proxy Count    : 12                                         │
+│ Rotation       : Every 30 seconds                           │
+└──────────────────────────────────────────────────────────────┘
+```
+
+> VEKO DOME akan terus berjalan & memutar identitas (IP, UA, TLS) otomatis.
+
+Untuk **berhenti**, cukup tekan **Ctrl + C** pada terminal.
 
 ---
 
-## ⏹️ CARA MENGHENTIKAN
+## FILE KONFIGURASI OTOMATIS
 
-Tekan `Ctrl + C` di terminal.
+Saat pertama dijalankan, file berikut otomatis dibuat:
 
-Program akan berhenti dengan aman.
-
----
-
-## 🔧 PENGATURAN (config.json)
+### `config.json`
 
 ```json
 {
@@ -86,93 +105,83 @@ Program akan berhenti dengan aman.
 }
 ```
 
-| Kunci               | Fungsi                                                                 |
-|---------------------|------------------------------------------------------------------------|
-| `rotation_interval_seconds` | Interval waktu rotasi identitas (detik)                   |
-| `tor_enabled`       | Gunakan TOR (jika true, proxy manual akan diabaikan)                  |
-| `doh_server`        | Server DNS over HTTPS (default: Cloudflare 1.1.1.1)                    |
-| `tls_fingerprint`   | Spoof TLS handshake (chrome, firefox, safari, edge)                   |
+Ubah nilai sesuai kebutuhan:
+
+* `tor_enabled`: true untuk aktifkan Tor
+* `rotation_interval_seconds`: waktu rotasi IP/UA
+* `tls_fingerprint`: `chrome`, `firefox`, `safari`, `edge`
 
 ---
 
-## 🛰️ TAMPILAN DASHBOARD
+## FORMAT PROXYLIST
 
-```text
-┌────────────────── VEKO DOME - STEALTH MODE ──────────────────┐
-│ Current IP     : 185.23.104.50                               │
-│ Status         : Proxy Active                                │
-│ DNS Mode       : DoH (1.1.1.1)                               │
-│ TLS Spoof      : CHROME                                      │
-│ User Agent     : Mozilla/5.0 (Windows NT 10.0...)            │
-│ Proxy Count    : 47                                          │
-│ Rotation       : Every 30 seconds                            │
-└──────────────────────────────────────────────────────────────┘
+Isi `proxylist.txt` dengan format:
+
+```
+# HTTP
+123.456.78.90:8080
+123.456.78.91:3128:user:pass
+
+# SOCKS5
+socks5://127.0.0.1:9050
+socks5://123.123.123.123:1080:user:pass
 ```
 
-Update setiap 10 detik secara otomatis.
-
 ---
 
-## 🧪 TEST ANONIMITAS (Opsional)
+## FORMAT USERAGENT FILE
 
-Tambahkan di `main.go`:
-```go
-vd.TestAnonymity()
+Contoh isi `useragents.txt`:
+
+```
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ...
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ...
 ```
 
-Menampilkan:
-- IP dari beberapa layanan
-- Header aktif
-- Deteksi DNS leak
+> Jika file tidak ada, akan dibuat otomatis dengan beberapa default UA.
 
 ---
 
-## 📁 PENGELOLAAN FILE
+## INTEGRASI DENGAN VEKO GO
 
-| File             | Fungsi                     |
-|------------------|----------------------------|
-| `proxylist.txt`  | Daftar proxy aktif (acak)  |
-| `useragents.txt` | Daftar User-Agent acak     |
-| `config.json`    | Konfigurasi semua fitur    |
+* Jalankan VEKO DOME terlebih dahulu
+* Pastikan koneksi keluar sudah terproteksi (lihat IP, status)
+* Jalankan VEKO GO (load test) secara bersamaan
 
----
-
-## 💡 CONTOH PENGGUNAAN
-
-- Anonim scraping website publik
-- Melindungi identitas saat load testing
-- Riset koneksi outbound anonim
-- Pengujian infrastruktur yang membutuhkan IP acak
+```bash
+./veko-go --url https://target.site --vus 100 --duration 30s
+```
 
 ---
 
-## 🛑 PERINGATAN
+## PERINGATAN ETIS
 
-> VEKO DOME dibuat **untuk tujuan sah & riset etis**.  
-> Dilarang digunakan untuk:
-> - Penipuan / DDoS
-> - Peretasan / pembajakan
-> - Aktivitas ilegal
+Tool ini **tidak untuk digunakan secara sembarangan**.
 
-Pengembang tidak bertanggung jawab atas penyalahgunaan.
+> VEKO DOME + VEKO GO = senjata kuat. Gunakan hanya untuk:
 
----
+* Penelitian keamanan
+* Pengujian performa situs milik sendiri
+* Audit jaringan yang legal
 
-## 🔓 LISENSI
-
-Proyek ini open-source dan dapat dikembangkan bebas, selama mematuhi etika dan hukum.
+**Jangan gunakan untuk kegiatan ilegal, penyerangan, atau abuse.**
 
 ---
 
-## 🧠 KONTRIBUSI / PENGEMBANGAN
+## KONTRIBUSI & LISENSI
 
-Untuk fitur lanjutan seperti:
-- Web GUI controller
-- Integrasi VPN external
-- Sistem log atau output JSON
-
-Silakan buat issue atau fork dan pull request.
+* Proyek terbuka dan bebas digunakan
+* Beri kredit dan jangan ubah nama "VEKO"
+* Boleh di-clone dan dibagikan
 
 ---
 
-## 🦾 Dibuat dengan 🔒 oleh Veko Project
+## PENUTUP
+
+VEKO DOME adalah lapisan perlindungan trafik yang tangguh, cocok dipakai sendiri maupun terintegrasi ke VEKO GO.
+
+Selalu gunakan dengan tanggung jawab dan etika.
+
+> Untuk pertanyaan atau dukungan, silakan hubungi melalui GitHub!
+
+---
